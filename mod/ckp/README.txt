@@ -1,1 +1,1 @@
-development course knoledge point
+Development course knowledge point for Moodle
