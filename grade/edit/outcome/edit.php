@@ -126,6 +126,7 @@ if ($mform->is_cancelled()) {
 } else if ($data = $mform->get_data()) {
     $outcome = new grade_outcome(array('id'=>$id));
     $data->usermodified = $USER->id;
+    $outcome->parent = $data->parent;
 
     if (empty($outcome->id)) {
         $data->description = $data->description_editor['text'];
@@ -138,7 +139,8 @@ if ($mform->is_cancelled()) {
             $outcome->courseid = null;
         }
         $outcome->insert();
-
+        
+        $DB->set_field($outcome->table, 'parent', $data->parent, array('id'=>$outcome->id));
         $data = file_postupdate_standard_editor($data, 'description', $editoroptions, $systemcontext, 'grade', 'outcome', $outcome->id);
         $DB->set_field($outcome->table, 'description', $data->description, array('id'=>$outcome->id));
     } else {

@@ -49,7 +49,7 @@ class grade_outcome extends grade_object {
      * @var array $required_fields
      */
     public $required_fields = array('id', 'courseid', 'shortname', 'fullname', 'scaleid','description',
-                                 'descriptionformat', 'timecreated', 'timemodified', 'usermodified');
+                                 'descriptionformat', 'timecreated', 'timemodified', 'usermodified', 'parent');
 
     /**
      * The course this outcome belongs to.
@@ -100,6 +100,9 @@ class grade_outcome extends grade_object {
      * @param string $source from where was the object deleted (mod/forum, manual, etc.)
      * @return bool success
      */
+
+    public $parent;
+
     public function delete($source=null) {
         global $DB;
         if (!empty($this->courseid)) {

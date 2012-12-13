@@ -30,7 +30,7 @@ require_once $CFG->libdir.'/formslib.php';
 
 class edit_outcome_form extends moodleform {
     public function definition() {
-        global $CFG, $COURSE;
+        global $CFG, $COURSE, $DB;
         $mform =& $this->_form;
 
         // visible elements
@@ -48,6 +48,13 @@ class edit_outcome_form extends moodleform {
         $mform->addHelpButton('standard', 'outcomestandard', 'grades');
 
         $options = array();
+
+        $out_array = $DB->get_records_menu('grade_outcomes', array(), '', 'id, fullname');
+        foreach($out_array as $id => $fullname) {
+            $out_array[$id] = strip_tags(format_string($fullname));
+        }
+
+        $mform->addElement('select', 'parent', 'Parent', $out_array);
 
         $mform->addElement('selectwithlink', 'scaleid', get_string('scale'), $options, null,
             array('link' => $CFG->wwwroot.'/grade/edit/scale/edit.php?courseid='.$COURSE->id, 'label' => get_string('scalescustomcreate')));

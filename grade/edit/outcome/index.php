@@ -57,6 +57,7 @@ $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'outcome', 'cours
 
 $strshortname        = get_string('outcomeshortname', 'grades');
 $strfullname         = get_string('outcomefullname', 'grades');
+$strparent           = "Parent";
 $strscale            = get_string('scale');
 $strstandardoutcome  = get_string('outcomesstandard', 'grades');
 $strcustomoutcomes   = get_string('outcomescustom', 'grades');
@@ -128,6 +129,12 @@ if ($courseid and $outcomes = grade_outcome::fetch_all_local($courseid)) {
         $line = array();
         $line[] = $outcome->get_name();
         $line[] = $outcome->get_shortname();
+        $parent = $DB->get_record('grade_outcomes', array('id' => $outcome->parent))
+	    if ($parent) {
+	        $line[] = $parent->fullname;
+	    } else {
+		    $line[] = '-'
+	    }
 
         $scale = $outcome->load_scale();
         if (empty($scale->id)) {   // hopefully never happens
@@ -160,9 +167,9 @@ if ($courseid and $outcomes = grade_outcome::fetch_all_local($courseid)) {
         $data[] = $line;
     }
     $table = new html_table();
-    $table->head  = array($strfullname, $strshortname, $strscale, $stritems, $stredit);
-    $table->size  = array('30%', '20%', '20%', '20%', '10%' );
-    $table->align = array('left', 'left', 'left', 'center', 'center');
+    $table->head  = array($strfullname, $strshortname, $strparent, $strscale, $stritems, $stredit);
+    $table->size  = array('30%', '20%', '20%', '10%', '10%', '10%' );
+    $table->align = array('left', 'left', 'left', 'left', 'center', 'center');
     $table->width = '90%';
     $table->data  = $data;
     $return .= html_writer::table($table);
@@ -178,6 +185,13 @@ if ($outcomes = grade_outcome::fetch_all_global()) {
         $line[] = $outcome->get_name();
         $line[] = $outcome->get_shortname();
 
+        $parent = $DB->get_record('grade_outcomes', array('id' => $outcome->parent))
+	    if ($parent) {
+	        $line[] = $parent->fullname;
+	    } else {
+		    $line[] = '-'
+	    }
+        
         $scale = $outcome->load_scale();
         if (empty($scale->id)) {   // hopefully never happens
             $line[] = $scale->get_name();
@@ -212,9 +226,9 @@ if ($outcomes = grade_outcome::fetch_all_global()) {
         $data[] = $line;
     }
     $table = new html_table();
-    $table->head  = array($strfullname, $strshortname, $strscale, $strcourses, $stritems, $stredit);
-    $table->size  = array('30%', '20%', '20%', '10%', '10%', '10%');
-    $table->align = array('left', 'left', 'left', 'center', 'center', 'center');
+    $table->head  = array($strfullname, $strshortname, $strparent, $strscale, $strcourses, $stritems, $stredit);
+    $table->size  = array('30%', '20%', '10%', '10%', '10%', '10%', '10%' );
+    $table->align = array('left', 'left', 'left', 'left', 'center', 'center');
     $table->width = '90%';
     $table->data  = $data;
     $return .= html_writer::table($table);
