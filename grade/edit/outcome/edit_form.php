@@ -48,12 +48,17 @@ class edit_outcome_form extends moodleform {
         $mform->addHelpButton('standard', 'outcomestandard', 'grades');
 
         $options = array();
-
-        $out_array = $DB->get_records_menu('grade_outcomes', array(), '', 'id, fullname');
-        foreach($out_array as $id => $fullname) {
-            $out_array[$id] = strip_tags(format_string($fullname));
+         
+        $out_array = array();
+        $outcome_array = $DB->get_records_menu('grade_outcomes', array('parent'=>0), '', 'id, fullname');
+        
+        foreach($outcome_array as $id => $fullname) {
+	        $curr_out_id = $_GET['id'];
+	        if ($curr_out_id != $id) {
+		        $out_array[$id] = strip_tags(format_string($fullname));
+	        }
         }
-
+        array_unshift($out_array, "None");
         $mform->addElement('select', 'parent', 'Parent', $out_array);
 
         $mform->addElement('selectwithlink', 'scaleid', get_string('scale'), $options, null,

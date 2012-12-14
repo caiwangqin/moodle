@@ -240,6 +240,17 @@ if ($courseid) {
     print_grade_page_head($courseid, 'outcome', 'edit', $heading);
 }
 
+echo "<ul style='list-style:none;'>";
+$out_array = $DB->get_records_menu('grade_outcomes', array('parent' => 0), '', 'id, fullname');
+foreach($out_array as $id => $fullname) {
+	echo "<li style='padding:5px;'><a href='/grade/edit/outcome/edit.php?&id='".$id.">".$fullname."</a></li>";
+    $p_recs = $DB->get_records_menu('grade_outcomes', array('parent' => $id), '', 'id, fullname');
+	foreach($p_recs as $id => $fullname) {
+		echo "<li style='padding:5px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/grade/edit/outcome/edit.php?&id='".$id.">".$fullname."</a></li>";
+	}
+}
+echo "</ul>";
+
 foreach($outcomes_tables as $table) {
     echo $table;
 }
